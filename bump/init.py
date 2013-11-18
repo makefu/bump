@@ -1,9 +1,10 @@
 from flask import Flask, Response, request
 from functools import wraps
-#import sys
+import sys
 import random
 import string
-storedir = "store"
+import os
+storedir = "%s/../store" % os.path.dirname(os.path.abspath(sys.argv[0]))
 app = Flask(__name__)
 app.config['storedir'] = storedir
 
@@ -35,13 +36,14 @@ def init():
 @returns_plain
 @app.route("/", methods=["POST"])
 def store_file():
-    try:
-        data = request.form['p']
-        key = generate_key()
-        store(key, data)
-        return "http://%s/%s" % (request.host, key)
-    except:
-        return usage(request.host), 401
+    #try:
+    data = request.form['p']
+    key = generate_key()
+    store(key, data)
+    return u"http://%s/%s\n" % (request.host, key)
+    #except Exception as e:
+    #    print(e)
+    #    return usage(request.host), 401
 
 
 @returns_plain
@@ -55,19 +57,24 @@ def retrieve_file(key):
 
 def store(key, value):
     with open("%s/%s" % (storedir, key), "wb+") as f:
-        f.write(value)
+        f.write(bytes(value, "UTF-8"))
 
 
 def retrieve(key):
     with open("%s/%s" % (storedir, key), "rb+") as f:
-        return f.read()
+        return f.read().decode("UTF-8")
 
 
 def generate_key():
-    s = string.lowercase+string.digits
-    return ''.join(random.sample(s, 24))
+    s = string.ascii_lowercase+string.digits
+    return ''.join(random.sample(s, 10))
 
 
 if __name__ == "__main__":
     #app.debug = True
+    print("Storedir is %s" % storedir)
+    try:
+        os.mkdir(storedir)
+    except:
+        pass
     app.run(host='0.0.0.0')
