@@ -6,6 +6,9 @@ import os
 app = Flask(__name__)
 storedir = os.path.join(app.root_path, 'store')
 app.config['storedir'] = storedir
+print("Storedir is %s" % storedir)
+if not os.path.isdir(storedir):
+   os.mkdir(storedir)
 
 
 def returns_plain(f):
@@ -84,9 +87,4 @@ def generate_key():
 
 if __name__ == "__main__":
     app.debug = True
-    print("Storedir is %s" % storedir)
-    try:
-        os.mkdir(storedir)
-    except:
-        pass
     app.run(host='0.0.0.0')

@@ -11,7 +11,6 @@ It is written as a replacement for the gorgeous sprunge.us
     pip install -r deps.txt
 
 ## Startup
-
-    . bin/activate
-    cd bump
-    gunicorn -b 127.0.0.1:4000 init:app
+  
+    
+    ./run.sh
