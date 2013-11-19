@@ -1,11 +1,10 @@
 from flask import Flask, Response, request, send_from_directory
 from functools import wraps
-import sys
 import random
 import string
 import os
 app = Flask(__name__)
-storedir = os.path.join(app.root_path, 'store'),
+storedir = os.path.join(app.root_path, 'store')
 app.config['storedir'] = storedir
 
 
@@ -25,10 +24,13 @@ def usage(host):
 <   balls
 Source at http://github.com/makefu/bump""".format(host)
 
+
 @app.route('/favicon.ico')
 def favicon():
     return send_from_directory(os.path.join(app.root_path, 'static'),
-                               'favicon.ico', mimetype='image/vnd.microsoft.icon')
+                               'favicon.ico',
+                               mimetype='image/vnd.microsoft.icon')
+
 
 @returns_plain
 @app.route("/", methods=["GET"])
@@ -63,11 +65,11 @@ def retrieve_file(key):
 def store(key, value):
     with open("%s/%s" % (storedir, key), "wb+") as f:
         try:
-          # py3
-          f.write(bytes(value, "UTF-8"))
+            # py3
+            f.write(bytes(value, "UTF-8"))
         except:
-          # py2
-          f.write(value)
+            # py2
+            f.write(value)
 
 
 def retrieve(key):

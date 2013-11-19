@@ -14,4 +14,4 @@ It is written as a replacement for the gorgeous sprunge.us
 
     . bin/activate
     cd bump
-    python init.py
+    gunicorn -b 127.0.0.1:4000 init:app
