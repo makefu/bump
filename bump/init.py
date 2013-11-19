@@ -72,7 +72,7 @@ def store(key, value):
             f.write(bytes(value, "UTF-8"))
         except:
             # py2
-            f.write(value)
+            f.write(value.encode("UTF-8"))
 
 
 def retrieve(key):
