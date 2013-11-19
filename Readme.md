@@ -5,11 +5,10 @@ It is written as a replacement for the gorgeous sprunge.us
 ## usage
 
     $ curl <host>
-
     Bump Usage:
     > echo balls | curl -F "p=<-" <host>
     <   http://<host>/q9a1bfljzm
-    > curl note/q9a1bfljzm
+    > curl <host>/q9a1bfljzm
     <   balls
     Source at http://github.com/makefu/bump
 
