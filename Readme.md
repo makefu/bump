@@ -14,7 +14,7 @@ It is written as a replacement for the gorgeous sprunge.us
 
     . bin/activate
     cd bump
-    gunicorn -b 127.0.0.1:4000 init:app
+    ./run.sh
 
 ## Configure nginx
     
