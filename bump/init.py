@@ -1,11 +1,11 @@
-from flask import Flask, Response, request
+from flask import Flask, Response, request, send_from_directory
 from functools import wraps
 import sys
 import random
 import string
 import os
-storedir = "%s/../store" % os.path.dirname(os.path.abspath(sys.argv[0]))
 app = Flask(__name__)
+storedir = os.path.join(app.root_path, 'store'),
 app.config['storedir'] = storedir
 
 
@@ -18,12 +18,17 @@ def returns_plain(f):
 
 
 def usage(host):
-    return """Usage:
+    return """Bump Usage:
 > echo balls | curl -F "p=<-" {0}
 <   http://{0}/q9a1bfljzm
 > curl {0}/q9a1bfljzm
-<   balls""".format(host)
+<   balls
+Source at http://github.com/makefu/bump""".format(host)
 
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory(os.path.join(app.root_path, 'static'),
+                               'favicon.ico', mimetype='image/vnd.microsoft.icon')
 
 @returns_plain
 @app.route("/", methods=["GET"])
@@ -40,7 +45,7 @@ def store_file():
     data = request.form['p']
     key = generate_key()
     store(key, data)
-    return u"http://%s/%s\n" % (request.host, key)
+    return "http://%s/%s\n" % (request.host, key)
     #except Exception as e:
     #    print(e)
     #    return usage(request.host), 401
@@ -57,7 +62,12 @@ def retrieve_file(key):
 
 def store(key, value):
     with open("%s/%s" % (storedir, key), "wb+") as f:
-        f.write(bytes(value, "UTF-8"))
+        try:
+          # py3
+          f.write(bytes(value, "UTF-8"))
+        except:
+          # py2
+          f.write(value)
 
 
 def retrieve(key):
@@ -71,7 +81,7 @@ def generate_key():
 
 
 if __name__ == "__main__":
-    #app.debug = True
+    app.debug = True
     print("Storedir is %s" % storedir)
     try:
         os.mkdir(storedir)
